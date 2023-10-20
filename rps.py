@@ -7,7 +7,7 @@ WIDTH = HEIGHT = 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Rock, Paper, Scissors!")
 
-pygame.mixer.music.load("opal.mp3")
+pygame.mixer.music.load("spritesAndBGM/opal.mp3")
 pygame.mixer.music.play(-1)
 
 CHOICE_SIZE = 60
@@ -15,10 +15,10 @@ CHOICE_SIZE = 60
 CPU_CHOICES = ["rock", "paper", "scissors"]
 CPU_CHOICE = choice(CPU_CHOICES)
 
-ROCK_IMG = pygame.transform.scale(pygame.image.load("rock.png"), (60, 60))
-PAPER_IMG = pygame.transform.scale(pygame.image.load("paper.png"), (60, 60))
-SCISSORS_IMG = pygame.transform.scale(pygame.image.load("scissors.png"), (60, 60))
-PLAYER_IMG = pygame.transform.scale(pygame.image.load("arrow.png"), (60, 60))
+ROCK_IMG = pygame.transform.scale(pygame.image.load("spritesAndBGM/rock.png"), (60, 60))
+PAPER_IMG = pygame.transform.scale(pygame.image.load("spritesAndBGM/paper.png"), (60, 60))
+SCISSORS_IMG = pygame.transform.scale(pygame.image.load("spritesAndBGM/scissors.png"), (60, 60))
+PLAYER_IMG = pygame.transform.scale(pygame.image.load("spritesAndBGM/arrow.png"), (60, 60))
 
 FONT = pygame.font.SysFont("ariel", 40)
 TITLE = FONT.render("Rock, Paper, Scissors!", 1, "black")
@@ -80,7 +80,7 @@ def calc_results(rock, paper, scissors):
 		if CPU_CHOICE == "rock":
 			ties += 1
 			cpu_rock.x, cpu_rock.y = RES_CPU_POS
-			pygame.draw.rect(WIN, (0, 0, 0, 0), cpu_rock)
+			pygame.draw.rect(WIN, "teal", cpu_rock)
 			WIN.blit(ROCK_IMG, cpu_rock)
 			WIN.blit(TIE_TEXT, (WIDTH/2 - TIE_TEXT.get_width()/2, HEIGHT/3 - TIE_TEXT.get_height()/3))
 
@@ -97,7 +97,6 @@ def calc_results(rock, paper, scissors):
 			pygame.draw.rect(WIN, "teal", cpu_scissors)
 			WIN.blit(SCISSORS_IMG, cpu_scissors)
 			WIN.blit(WIN_TEXT, (WIDTH/2 - WIN_TEXT.get_width()/2, HEIGHT/3 - WIN_TEXT.get_height()/3))
-
 	# <-- End of Player Choice Rock Situations -->
 
 	# <-- Player Choice Paper Situations -->
@@ -126,7 +125,6 @@ def calc_results(rock, paper, scissors):
 			pygame.draw.rect(WIN, "teal", cpu_scissors)
 			WIN.blit(SCISSORS_IMG, cpu_scissors)
 			WIN.blit(LOST_TEXT, (WIDTH/2 - LOST_TEXT.get_width()/2, HEIGHT/3 - LOST_TEXT.get_height()/3))
-
 	# <-- End of Player Choice Paper Situations -->
 
 	# <-- Player Choice Scissors Situations -->
@@ -163,6 +161,7 @@ def calc_results(rock, paper, scissors):
 
 run = True
 can_move = True
+can_click = True
 
 rock = pygame.Rect(WIDTH/4 - CHOICE_SIZE/4, 200,
 				CHOICE_SIZE, CHOICE_SIZE)
@@ -192,7 +191,8 @@ while run:
 		# <-- Controls -->
 		if event.type == pygame.KEYDOWN:
 			keys = pygame.key.get_pressed()
-			if keys[pygame.K_RETURN]:
+			if keys[pygame.K_RETURN] and can_click == True:
+				can_click = False
 				can_move = False
 				calc_results(rock, paper, scissors)
 			elif (keys[pygame.K_DOWN] or keys[pygame.K_s]) and (can_move == True):
@@ -219,6 +219,7 @@ while run:
 						draw(rock, paper, scissors, player)
 			if keys[pygame.K_r] and can_move == False:
 				can_move = True
+				can_click = True
 				draw(rock, paper, scissors, player)
 				CPU_CHOICE = choice(CPU_CHOICES)
 
